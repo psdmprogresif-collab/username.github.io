@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Service AC – Langsung via WhatsApp</title>
+<meta name="description" content="Pesan service AC mudah dan cepat. Isi form, langsung kirim ke WhatsApp kami.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;min-height:100vh;padding:16px 12px 40px}
+.wrap{max-width:480px;margin:0 auto}
+.header{background:#075E54;border-radius:14px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.hico{width:50px;height:50px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.header h1{color:#fff;font-size:17px;font-weight:600;line-height:1.3}
+.header p{color:#9fe1cb;font-size:12px;margin-top:3px}
+.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.step-t{font-size:13px;font-weight:600;color:#111;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.snum{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#075E54;color:#fff;border-radius:50%;font-size:11px;font-weight:700}
+label.fl{display:block;font-size:12px;color:#666;margin-bottom:4px;margin-top:8px}
+label.fl:first-child{margin-top:0}
+input[type=text],input[type=tel],input[type=date],textarea{width:100%;padding:9px 11px;font-size:14px;border:1.5px solid #ddd;border-radius:9px;background:#fafafa;color:#111;font-family:inherit;-webkit-appearance:none}
+input:focus,textarea:focus{outline:none;border-color:#075E54}
+textarea{min-height:64px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:7px 13px;border:1.5px solid #ddd;border-radius:20px;font-size:13px;cursor:pointer;color:#555;background:#fafafa;transition:all .12s;-webkit-tap-highlight-color:transparent;user-select:none}
+.chip.on{background:#e8f5e9;border-color:#075E54;color:#075E54;font-weight:600}
+.chip.unit{min-width:44px;text-align:center;padding:7px 10px}
+.prev{background:#ECE5DD;border-radius:12px;padding:12px;margin-bottom:10px;display:none}
+.prev-t{font-size:12px;color:#075E54;font-weight:600;margin-bottom:8px}
+.bubble{background:#fff;border-radius:2px 10px 10px 10px;padding:10px 12px;font-size:13px;line-height:1.65;color:#111;white-space:pre-wrap;word-break:break-word}
+.wa-btn{width:100%;padding:14px;font-size:15px;font-weight:600;background:#25D366;color:#fff;border:none;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;-webkit-tap-highlight-color:transparent}
+.cp-btn{width:100%;padding:11px;font-size:14px;background:#fff;border:1.5px solid #ddd;border-radius:11px;cursor:pointer;color:#555;-webkit-tap-highlight-color:transparent}
+.err{font-size:11px;color:#c0392b;margin-top:4px;display:none}
+.note{font-size:11px;color:#999;text-align:center;margin-top:8px;line-height:1.5}
+.pow{text-align:center;font-size:11px;color:#bbb;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="header">
+  <div class="hico">❄️</div>
+  <div>
+    <h1>Order Service AC</h1>
+    <p>Isi form → langsung kirim ke WhatsApp kami</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="step-t"><span class="snum">1</span> Data kamu</div>
+  <label class="fl">Nama lengkap</label>
+  <input type="text" id="nama" placeholder="Budi Santoso">
+  <div class="row2">
+    <div><label class="fl">No. WhatsApp</label><input type="tel" id="hp" placeholder="08xx-xxxx-xxxx"></div>
+    <div><label class="fl">Area / Kecamatan</label><input type="text" id="area" placeholder="Medan Baru"></div>
+  </div>
+  <label class="fl">Alamat lengkap</label>
+  <textarea id="alamat" placeholder="Jl. dan nomor rumah..."></textarea>
+  <div class="err" id="err-data">Nama, nomor WA, dan alamat wajib diisi</div>
+</div>
+
+<div class="card">
+  <div class="step-t"><span class="snum">2</span> Pilih layanan</div>
+  <div class="chips">
+    <div class="chip" data-val="Cuci AC (Rp75rb/unit)" onclick="togSvc(this)">❄️ Cuci AC</div>
+    <div class="chip" data-val="Isi Freon (Rp150rb)" onclick="togSvc(this)">💨 Isi Freon</div>
+    <div class="chip" data-val="Bongkar Pasang (Rp200rb)" onclick="togSvc(this)">🔧 Bongkar Pasang</div>
+    <div class="chip" data-val="Perbaikan / Kerusakan (survei dulu)" onclick="togSvc(this)">🛠️ Perbaikan</div>
+    <div class="chip" data-val="Pasang AC baru" onclick="togSvc(this)">🆕 Pasang Baru</div>
+  </div>
+  <div class="err" id="err-svc">Pilih minimal 1 layanan</div>
+</div>
+
+<div class="card">
+  <div class="step-t"><span class="snum">3</span> Jumlah unit AC</div>
+  <div class="chips">
+    <div class="chip unit on" data-val="1" onclick="setUnit(this)">1</div>
+    <div class="chip unit" data-val="2" onclick="setUnit(this)">2</div>
+    <div class="chip unit" data-val="3" onclick="setUnit(this)">3</div>
+    <div class="chip unit" data-val="4" onclick="setUnit(this)">4</div>
+    <div class="chip unit" data-val="5+" onclick="setUnit(this)">5+</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="step-t"><span class="snum">4</span> Jadwal kunjungan</div>
+  <div class="row2">
+    <div><label class="fl">Tanggal</label><input type="date" id="tgl"></div>
+    <div>
+      <label class="fl">Waktu</label>
+      <div class="chips" style="margin-top:2px">
+        <div class="chip" data-val="Pagi (08–11)" onclick="setWaktu(this)">Pagi</div>
+        <div class="chip" data-val="Siang (11–14)" onclick="setWaktu(this)">Siang</div>
+        <div class="chip" data-val="Sore (14–17)" onclick="setWaktu(this)">Sore</div>
+      </div>
+    </div>
+  </div>
+  <div class="err" id="err-jadwal">Pilih tanggal dan waktu kunjungan</div>
+</div>
+
+<div class="card">
+  <div class="step-t"><span class="snum">5</span> Catatan (opsional)</div>
+  <textarea id="catatan" placeholder="Mis: merek Samsung, unit di lantai 2, AC tidak dingin sama sekali..."></textarea>
+</div>
+
+<div class="prev" id="prev">
+  <div class="prev-t">📋 Preview pesan WhatsApp</div>
+  <div class="bubble" id="bubble"></div>
+</div>
+
+<button class="wa-btn" onclick="kirim()">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  Kirim Order via WhatsApp
+</button>
+<button class="cp-btn" onclick="salin()">📋 Salin teks pesan saja</button>
+<p class="note">Tidak perlu website &bull; Gratis &bull; Langsung ke WhatsApp toko</p>
+
+<div class="pow">Dibuat dengan ❤️ untuk usaha service AC lokal</div>
+</div>
+
+<script>
+// ========== GANTI NOMOR WA DI SINI ==========
+const NOWA = "6281161613087";
+// =============================================
+
+let unit = "1";
+
+function togSvc(el){ el.classList.toggle('on'); buildPrev(); }
+function setUnit(el){
+  document.querySelectorAll('[onclick="setUnit(this)"]').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on'); unit = el.dataset.val; buildPrev();
+}
+function setWaktu(el){
+  document.querySelectorAll('[onclick="setWaktu(this)"]').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on'); buildPrev();
+}
+function getSvc(){ return [...document.querySelectorAll('[onclick="togSvc(this)"].on')].map(c=>c.dataset.val); }
+function getWaktu(){ const e=document.querySelector('[onclick="setWaktu(this)"].on'); return e?e.dataset.val:''; }
+
+function buildMsg(){
+  const nama=document.getElementById('nama').value.trim();
+  const hp=document.getElementById('hp').value.trim();
+  const area=document.getElementById('area').value.trim();
+  const alamat=document.getElementById('alamat').value.trim();
+  const tglRaw=document.getElementById('tgl').value;
+  const catatan=document.getElementById('catatan').value.trim();
+  const svcs=getSvc(); const waktu=getWaktu();
+  const tglFmt=tglRaw?new Date(tglRaw+'T00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
+  let msg='🔧 *ORDER SERVICE AC*\n━━━━━━━━━━━━━━━━━\n';
+  if(nama) msg+=`👤 *Nama:* ${nama}\n`;
+  if(hp) msg+=`📱 *WA:* ${hp}\n`;
+  if(alamat||area) msg+=`📍 *Alamat:* ${alamat}${area?' – '+area:''}\n`;
+  if(svcs.length){ msg+=`\n🛠️ *Layanan:*\n${svcs.map(s=>`  • ${s}`).join('\n')}\n`; msg+=`📦 *Jumlah unit:* ${unit} unit\n`; }
+  if(tglFmt||waktu){ msg+=`\n📅 *Jadwal:* ${tglFmt||'–'}\n`; if(waktu) msg+=`⏰ *Waktu:* ${waktu}\n`; }
+  if(catatan) msg+=`\n📝 *Catatan:* ${catatan}\n`;
+  msg+='\nMohon konfirmasinya, terima kasih 🙏';
+  return msg;
+}
+
+function buildPrev(){ document.getElementById('prev').style.display='block'; document.getElementById('bubble').textContent=buildMsg(); }
+['nama','hp','area','alamat','tgl','catatan'].forEach(id=>document.getElementById(id).addEventListener('input',buildPrev));
+
+function validate(){
+  let ok=true;
+  const nama=document.getElementById('nama').value.trim();
+  const hp=document.getElementById('hp').value.replace(/\D/g,'');
+  const alamat=document.getElementById('alamat').value.trim();
+  const d=document.getElementById('err-data');
+  const s=document.getElementById('err-svc');
+  const j=document.getElementById('err-jadwal');
+  if(!nama||hp.length<9||!alamat){d.style.display='block';ok=false;}else{d.style.display='none';}
+  if(!getSvc().length){s.style.display='block';ok=false;}else{s.style.display='none';}
+  if(!document.getElementById('tgl').value||!getWaktu()){j.style.display='block';ok=false;}else{j.style.display='none';}
+  return ok;
+}
+
+function kirim(){
+  if(!validate()){buildPrev();return;}
+  window.open('https://wa.me/'+NOWA+'?text='+encodeURIComponent(buildMsg()),'_blank');
+}
+
+function salin(){
+  buildPrev();
+  const t=buildMsg();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(t).then(()=>{
+      const b=document.querySelector('.cp-btn');
+      const o=b.textContent; b.textContent='✅ Tersalin!';
+      setTimeout(()=>b.textContent=o,2000);
+    });
+  }
+}
+
+document.getElementById('tgl').min=new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
